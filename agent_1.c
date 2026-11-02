@@ -5,8 +5,49 @@
 #define MAX_INPUT 256
 
 void print_banner() {
-    printf("\033[1;32m[iAgent v0.1] - Bare-Metal C Native Agent\033[0m\n");
-    printf("Type 'help' for commands or 'exit' to quit.\n\n");
+    printf("\033[1;32m[iAgent v0.2] - Bare-Metal C Native Agent (Real Task Executor)\033[0m\n");
+    printf("Type 'help' for commands, 'runtask' to process tasks, or 'exit' to quit.\n\n");
+}
+
+void process_tasks() {
+    FILE *f1 = fopen("task1.txt", "r");
+    if (!f1) {
+        printf("[-] Error: Could not open 'task1.txt'. Make sure the file exists.\n");
+        return;
+    }
+
+    FILE *f2 = fopen("task2.txt", "w");
+    if (!f2) {
+        printf("[-] Error: Could not create 'task2.txt'.\n");
+        fclose(f1);
+        return;
+    }
+
+    char line[MAX_INPUT];
+    int count = 0;
+    
+    fprintf(f2, "--- iAgent Task Execution Report ---\n");
+    while (fgets(line, sizeof(line), f1)) {
+        // حذف کاراکتر newline انتهای خط
+        line[strcspn(line, "\n")] = 0;
+        if (strlen(line) == 0) continue;
+
+        printf("[*] Executing real system command: %s\n", line);
+        
+        // اجرای واقعی دستور روی سیستم‌عامل
+        int ret = system(line);
+        
+        if (ret == 0) {
+            fprintf(f2, "Command: %s -> Status: Success\n", line);
+        } else {
+            fprintf(f2, "Command: %s -> Status: Failed (Code %d)\n", line, ret);
+        }
+        count++;
+    }
+
+    fclose(f1);
+    fclose(f2);
+    printf("[+] Successfully processed %d tasks from 'task1.txt' and wrote reports to 'task2.txt'.\n", count);
 }
 
 int main() {
@@ -25,22 +66,15 @@ int main() {
         } else if (strcmp(input, "help") == 0) {
             printf("Available commands:\n");
             printf("  hello      - Greet the user\n");
-            printf("  makec      - Create a boilerplate C file\n");
             printf("  sysinfo    - Show system environment status\n");
+            printf("  runtask    - Read commands from task1.txt and execute them\n");
             printf("  exit       - Exit the agent\n");
         } else if (strcmp(input, "hello") == 0) {
-            printf("سلام! من ایجنت بومیِ شما هستم. آماده‌ام تا فرامینِ سیستم‌دولوپری را اجرا کنم.\n");
-        } else if (strcmp(input, "makec") == 0) {
-            FILE *f = fopen("main.c", "w");
-            if (f) {
-                fprintf(f, "#include <stdio.h>\n\nint main() {\n    printf(\"Hello from iAgent generated C file!\\n\");\n    return 0;\n}\n");
-                fclose(f);
-                printf("[+] Successfully generated 'main.c'!\n");
-            } else {
-                printf("[-] Error creating file.\n");
-            }
+            printf("سلام! ایجنت آماده‌ی اجرای دستورات سیستمی است.\n");
+        } else if (strcmp(input, "runtask") == 0) {
+            process_tasks();
         } else if (strcmp(input, "sysinfo") == 0) {
-            printf("[*] Environment: Termux / Linux Bare-Metal\n[*] Core Language: C11 Standard\n");
+            printf("[*] Environment: Termux / Linux Bare-Metal\n[*] Core: C11 Real Execution Engine\n");
         } else if (strlen(input) > 0) {
             printf("Unknown command: '%s'. Type 'help' for options.\n", input);
         }
