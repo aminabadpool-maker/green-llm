@@ -1,12 +1,12 @@
-# iWeb (آقای وب)
+# Green LLM / Topological Pipeline Architecture
 
-> High-performance, agent-native CLI tool written in pure C for ultra-fast, zero-latency web extraction.
+An experimental, zero-overhead, deterministic language routing concept built in C. 
 
-## Overview
-iWeb is engineered specifically for AI agents and low-level system pipelines in pure C11 with zero dependencies.
+## The Core Idea
+Instead of heavy probabilistic matrix computations and massive transformer models, this architecture treats language processing like **physical plumbing**:
+- **Golf Balls (Nodes):** Words or concepts fixed in a multi-layered structure.
+- **Green Pipes (Deterministic Edges):** Solidified, single-path connections where meaning is clear, unambiguous, and flows instantly without hallucination or heavy overhead.
+- **White Edges (Learning Phase):** Temporary branching paths used during exploration and learning before they solidify into green pipes.
 
-## Usage & Examples
-
-- Standard: `./iweb https://example.com`
-- Code mode: `./iweb -c https://example.com`
-- Smart mode: `./iweb -s https://example.com`
+## Project Structure
+- `main.c`: A proof-of-concept implementation of layered nodes and green pipeline flow in C.
